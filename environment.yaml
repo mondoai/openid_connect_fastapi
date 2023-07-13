@@ -1,0 +1,31 @@
+name: openid_connect_env
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - ca-certificates
+  - colorama
+  - coloredlogs
+  - conda-build
+  - conda-index
+  - conda-package-handling
+  - conda-package-streaming
+  - conda-souschef
+  - cryptography
+  - fastapi
+  - gunicorn
+  - jsonpatch
+  - jsonpointer
+  - numpy
+  - openssl
+  - pydantic
+  - pyjwt
+  - pymongo
+  - python=3.11
+  - pyyaml
+  - tqdm
+  - uvicorn
+  - yaml
+prefix: /home/ec2-user/envs/openid_connect_env
+# prefix: /Users/ali/miniforge3/envs/openid_connect_env
