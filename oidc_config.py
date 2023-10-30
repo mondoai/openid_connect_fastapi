@@ -8,6 +8,7 @@ class JWKConfig(BaseModel):
     cert_type_rsa: bool
     priv_key_file_name: str
     pub_key_file_name: str
+    pub_cert_file_name: str
     cert_chain_file_name: str
 
 
@@ -50,6 +51,12 @@ class ClientEndpointConfig(BaseModel):
 
     client_registrar_module: str
 
+class OIDCVaultKeeper(BaseModel):
+    """TODO"""
+    handshake: str
+    encryption_key: str
+    hmac_key: str
+
 
 class OIDCModuleConfigConfiguration(BaseModel):
     """TODO"""
@@ -62,6 +69,7 @@ class OIDCModuleConfigConfiguration(BaseModel):
     token_endpoint: TokenEndpointConfig
     user_info_endpoint: UserInfoEndpointConfig
     client_endpoint: ClientEndpointConfig
+    vault_keeper: OIDCVaultKeeper
 
 
 class OIDCModuleConfig(BaseModel):

@@ -2,12 +2,14 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from fastapi import FastAPI, Header
 from fastapi.param_functions import Query
 from pydantic import BaseModel, Field, HttpUrl
 
 
 class ClientAuthorizationRegistry(BaseModel):
     """TODO"""
+
     redirect_uri_hostname: str
     redirect_uri_port: str
     redirect_uri_path: str

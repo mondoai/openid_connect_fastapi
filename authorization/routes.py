@@ -10,13 +10,17 @@ from typing import Any, Protocol, Type
 from urllib.parse import quote, urlparse
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, status
+from fastapi.responses import RedirectResponse
+
 # from fastapi.responses import PlainTextResponse
-from starlette.responses import RedirectResponse
 
 from oidc_config import AppConstants, OIDCConfig
 
-from .models import (AuthorizationGetRequest, AuthorizationRequest,
-                     ClientAuthorizationRegistry)
+from .models import (
+    AuthorizationGetRequest,
+    AuthorizationRequest,
+    ClientAuthorizationRegistry,
+)
 
 # from typing import Annotated
 
@@ -183,8 +187,9 @@ class OIDCAuthorization:
         if isinstance(authorization_request, AuthorizationGetRequest):
             authorization_request_as_dict = asdict(authorization_request)
         else:
-            authorization_request_as_dict = authorization_request.dict()
+            authorization_request_as_dict = authorization_request.model_dump()
 
+        authorization_request_as_dict["granted"] = True
         authorization_request_id = await cls._authorization_request_registrar_module.post_authorization_request(
             authorization_request_as_dict
         )
@@ -197,6 +202,7 @@ class OIDCAuthorization:
         )
 
         response = RedirectResponse(url=temp_redirect_uri)
+        # print(f"{temp_redirect_uri}")
         return response
 
     @classmethod
@@ -216,11 +222,14 @@ class OIDCAuthorization:
             "/authorize",
             tags=[" authorize "],
             summary="OIDC authorize GET implementation",
+            response_class=RedirectResponse,
+            status_code=302,
         )
         async def get_oidc_authorize(
             authorization_request: AuthorizationGetRequest = Depends(),
         ) -> dict[Any, Any]:
             response = await cls.__process_authorization_request(authorization_request)
+            # print(f"{response=}")
             return response
 
         # registering the jwks x5c endpoint
@@ -228,11 +237,12 @@ class OIDCAuthorization:
             "/authorize",
             tags=[" authorize "],
             summary="OIDC authorize POST implementation",
+            response_class=RedirectResponse,
         )
         async def post_oidc_authorize(
             authorization_request: AuthorizationRequest,
         ) -> dict[Any, Any]:
-            pp.pprint(authorization_request)
+            # pp.pprint(authorization_request)
             response = await cls.__process_authorization_request(authorization_request)
             return response
 
